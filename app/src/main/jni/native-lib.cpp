@@ -25,6 +25,10 @@ bool isLibraryLoaded(const char *libraryName) {
 #define libTarget "libil2cpp.so"
 
 void dump_thread() {
+    static bool donce = false;
+    if (donce) { return; }
+    donce = true;
+
     LOGI("Lib loaded");
     do {
         sleep(1);
@@ -61,6 +65,10 @@ CallJNI_OnUnload_t RealJNIOnUnload = 0;
 JNIEXPORT jint JNICALL CallJNIOL(JavaVM *vm, void *reserved) {
     LOGI("OnLoad called");
 
+    static bool donce = false;
+    if (donce) { return JNI_VERSION_1_6; }
+    donce = true;
+
     std::thread(dump_thread).detach();
 
     if (!pLibRealUnity)
@@ -75,6 +83,10 @@ JNIEXPORT jint JNICALL CallJNIOL(JavaVM *vm, void *reserved) {
 JNIEXPORT void JNICALL CallJNIUL(JavaVM *vm, void *reserved) {
     LOGI("OnUnload called");
 
+    static bool donce = false;
+    if (donce) { return; }
+    donce = true;
+
     if (!pLibRealUnity)
         pLibRealUnity = dlopen("librealmain.so", RTLD_NOW);
     if (!pLibRealUnity)
@@ -87,12 +99,18 @@ JNIEXPORT void JNICALL CallJNIUL(JavaVM *vm, void *reserved) {
 
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
     LOGI("Initialize JNI");
+    static bool donce = false;
+    if (donce) { return JNI_VERSION_1_6; }
+    donce = true;
 
     return CallJNIOL(vm, reserved);
 }
 
 JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved) {
     LOGI("Unload JNI");
+    static bool donce = false;
+    if (donce) { return; }
+    donce = true;
 
     CallJNIUL(vm, reserved);
 }
@@ -101,6 +119,9 @@ JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved) {
 
 __attribute__((constructor))
 void lib_main() {
+    static bool donce = false;
+    if (donce) { return; }
+    donce = true;
     // Create a new thread so it does not block the main thread, means the game would not freeze
     std::thread(dump_thread).detach();
 }

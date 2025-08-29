@@ -19,7 +19,7 @@
 #include <jni.h>
 
 
-#define DO_API(r, n, p) r (*n) p
+#define DO_API(r, n, rn, p) r (*n) p
 
 #include "il2cpp-api-functions.h"
 
@@ -39,7 +39,7 @@ const char *GetPackageName() {
 }
 
 void init_il2cpp_api(void *handle) {
-#define DO_API(r, n, p) n = (r (*) p)dlsym(handle, #n)
+#define DO_API(r, n, rn, p) n = (r (*) p)dlsym(handle, rn)
 
 // Do not use XDL yet because it doesn't support emulators
 
