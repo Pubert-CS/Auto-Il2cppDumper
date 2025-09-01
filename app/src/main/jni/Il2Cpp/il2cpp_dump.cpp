@@ -19,7 +19,8 @@
 #include <jni.h>
 
 
-#define DO_API(r, n, rn, p) r (*n) p
+#define DO_API(r, n, rn, p) \
+    inline r(*n) p = (r (*) p)dlsym(dlopen("libil2cpp.so", RTLD_LAZY), rn);
 
 #include "il2cpp-api-functions.h"
 
@@ -444,11 +445,11 @@ void il2cpp_dump(const char *outDir) {
             }
         }
     }
-	
+
     auto outPath = std::string(outDir);
-	
-	LOGI("Save dump file to %s", outPath.c_str());
-	
+
+    LOGI("Save dump file to %s", outPath.c_str());
+
     std::ofstream outStream(outPath);
     outStream << imageOutput.str();
     auto count = outPuts.size();

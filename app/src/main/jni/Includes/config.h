@@ -6,7 +6,7 @@
 #define AUTO_IL2CPPDUMPER_CONFIG_H
 
 // Try increase sleep time if having issues with the game. Decrease sleep time if anti-cheat detection it earlier
-#define Sleep 2
+#define Sleep 0
 
 // Uncomment for fake lib mode
 // It is to load our fake libmain.so or libunity.so and load game's real librealmain.so or librealunity.so
